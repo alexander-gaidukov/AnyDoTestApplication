@@ -9,9 +9,15 @@ import Foundation
 import SwiftUI
 
 final class GrosseryItemsStorage: NSObject, ObservableObject {
-    @Published var isConnected = false {
+    enum ConnectionState {
+        case disconnected
+        case connecting
+        case connected
+    }
+    
+    @Published var connectionState: ConnectionState = .disconnected {
         didSet {
-            if !isConnected { groupItems() }
+            if connectionState == .disconnected { groupItems() }
         }
     }
     @Published var items: [GrosseryItem] = []
@@ -30,11 +36,12 @@ final class GrosseryItemsStorage: NSObject, ObservableObject {
         resume()
     }
     
-    func cancel() {
+    func disconnect() {
         socket.cancel(with: .goingAway, reason: nil)
     }
     
     func resume() {
+        connectionState = .connecting
         socket = urlSession.webSocketTask(with: url)
         establishConnection()
     }
@@ -80,10 +87,10 @@ final class GrosseryItemsStorage: NSObject, ObservableObject {
 
 extension GrosseryItemsStorage: URLSessionWebSocketDelegate {
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
-        isConnected = true
+        connectionState = .connected
     }
     
     func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
-        isConnected = false
+        connectionState = .disconnected
     }
 }

@@ -13,6 +13,7 @@
 		7126196627FB19CC002FEC1F /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7126196527FB19CC002FEC1F /* Preview Assets.xcassets */; };
 		7126196E27FB1A1A002FEC1F /* GrosseryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7126196D27FB1A1A002FEC1F /* GrosseryItem.swift */; };
 		7126197227FB1AD7002FEC1F /* GrosseryItemsStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7126197127FB1AD7002FEC1F /* GrosseryItemsStorage.swift */; };
+		7126197627FB2A6A002FEC1F /* Color+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7126197527FB2A6A002FEC1F /* Color+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		7126196D27FB1A1A002FEC1F /* GrosseryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrosseryItem.swift; sourceTree = "<group>"; };
 		7126197127FB1AD7002FEC1F /* GrosseryItemsStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrosseryItemsStorage.swift; sourceTree = "<group>"; };
 		7126197327FB1F8C002FEC1F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		7126197527FB2A6A002FEC1F /* Color+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 		7126195D27FB19CB002FEC1F /* AnyDoTestApplication */ = {
 			isa = PBXGroup;
 			children = (
+				7126197427FB2A61002FEC1F /* Extensions */,
 				7126197327FB1F8C002FEC1F /* Info.plist */,
 				7126197027FB1ABA002FEC1F /* Storage */,
 				7126196C27FB19E1002FEC1F /* Models */,
@@ -89,6 +92,14 @@
 				7126197127FB1AD7002FEC1F /* GrosseryItemsStorage.swift */,
 			);
 			path = Storage;
+			sourceTree = "<group>";
+		};
+		7126197427FB2A61002FEC1F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				7126197527FB2A6A002FEC1F /* Color+.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -162,6 +173,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7126196E27FB1A1A002FEC1F /* GrosseryItem.swift in Sources */,
+				7126197627FB2A6A002FEC1F /* Color+.swift in Sources */,
 				7126196127FB19CB002FEC1F /* ContentView.swift in Sources */,
 				7126197227FB1AD7002FEC1F /* GrosseryItemsStorage.swift in Sources */,
 				7126195F27FB19CB002FEC1F /* AnyDoTestApplicationApp.swift in Sources */,
