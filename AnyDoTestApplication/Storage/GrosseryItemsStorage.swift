@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-final class GrosseryItemsStorage: NSObject, ObservableObject {
+final class GrosseryItemsStorage: ObservableObject {
     enum ConnectionState {
         case disconnected
         case connecting
@@ -20,30 +20,24 @@ final class GrosseryItemsStorage: NSObject, ObservableObject {
             if connectionState == .disconnected { groupItems() }
         }
     }
+    
     @Published var items: [GrosseryItem] = []
     
-    private let url: URL
-    private var urlSession: URLSession!
-    private var socket: URLSessionWebSocketTask!
+    private var loader: GrosseryItemsLoaderType?
     
-    private let decoder = JSONDecoder()
-    
-    init(with url: URL) {
-        self.url = url
-        super.init()
-        
-        urlSession = URLSession(configuration: .default, delegate: self, delegateQueue: .main)
-        resume()
+    func register(loader: GrosseryItemsLoaderType) {
+        loader.delegate = self
+        loader.start()
+        self.loader = loader
     }
     
     func disconnect() {
-        socket.cancel(with: .goingAway, reason: nil)
+        loader?.stop()
     }
     
     func resume() {
         connectionState = .connecting
-        socket = urlSession.webSocketTask(with: url)
-        establishConnection()
+        loader?.start()
     }
     
     private func groupItems() {
@@ -52,45 +46,20 @@ final class GrosseryItemsStorage: NSObject, ObservableObject {
         dictionary.values.forEach { sortedItems.append(contentsOf: $0) }
         self.items = sortedItems
     }
-    
-    private func establishConnection() {
-        addListener()
-        socket.resume()
-    }
-    
-    private func addListener() {
-        socket.receive { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let response):
-                switch response {
-                case .data(let data):
-                    self.addGrosseryItem(with: data)
-                case .string(let message):
-                    if let data = message.data(using: .utf8) { self.addGrosseryItem(with: data) }
-                @unknown default:
-                    break
-                }
-            case .failure(let error):
-                print("Error is received \(error.localizedDescription)")
-            }
-            
-            self.addListener()
-        }
-    }
-    
-    private func addGrosseryItem(with data: Data) {
-        guard let item = try? decoder.decode(GrosseryItem.self, from: data) else { return }
-        items.append(item)
-    }
 }
 
-extension GrosseryItemsStorage: URLSessionWebSocketDelegate {
-    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didOpenWithProtocol protocol: String?) {
+extension GrosseryItemsStorage: GrosseryItemsLoaderDelegate {
+    func loader(_ loader: GrosseryItemsLoaderType, didLoadItem item: GrosseryItem) {
+        items.append(item)
+    }
+    
+    func loaderDidEstablishConnection(_ loader: GrosseryItemsLoaderType) {
         connectionState = .connected
     }
     
-    func urlSession(_ session: URLSession, webSocketTask: URLSessionWebSocketTask, didCloseWith closeCode: URLSessionWebSocketTask.CloseCode, reason: Data?) {
+    func loaderDidCloseConnection(_ loader: GrosseryItemsLoaderType) {
         connectionState = .disconnected
     }
+    
+   
 }

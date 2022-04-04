@@ -66,7 +66,7 @@ struct DetailView: View {
 }
 
 struct ContentView: View {
-    @StateObject var storage = GrosseryItemsStorage(with: URL(string: "ws://superdo-groceries.herokuapp.com/receive")!)
+    @StateObject var storage = GrosseryItemsStorage()
     
     @Namespace var animation
     
@@ -119,6 +119,10 @@ struct ContentView: View {
                     )
                         .disabled(storage.connectionState == .connecting)
                 }
+            }
+            .task {
+                let loader = GrosseryItemsLoader(with:  URL(string: "ws://superdo-groceries.herokuapp.com/receive")!)
+                storage.register(loader: loader)
             }
             
             if selectedItem != nil {
