@@ -10,7 +10,7 @@ import SwiftUI
 struct GrosseryItemCell: View {
     let item: GrosseryItem
     let namespace: Namespace.ID
-    let onTouch: () -> ()
+    let onColorTouch: () -> ()
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -23,7 +23,7 @@ struct GrosseryItemCell: View {
                 .matchedGeometryEffect(id: item.id, in: namespace)
                 .frame(width: 40, height: 40)
                 .onTapGesture {
-                    onTouch()
+                    onColorTouch()
                 }
             VStack(spacing: 0) {
                 Text(item.name)
@@ -81,14 +81,14 @@ struct ContentView: View {
                             GrosseryItemCell(
                                 item: item,
                                 namespace: animation,
-                                onTouch: {
+                                onColorTouch: {
                                     guard storage.connectionState == .disconnected else { return }
                                     withAnimation {
                                         selectedItem = item
                                     }
                                 }
                             )
-                                .transition(.move(edge: .top))
+                            .transition(.move(edge: .top))
                         }
                     }
                     .animation(.default, value: storage.items.count)
@@ -117,7 +117,7 @@ struct ContentView: View {
                             }
                         }
                     )
-                        .disabled(storage.connectionState == .connecting)
+                    .disabled(storage.connectionState == .connecting)
                 }
             }
             .task {
